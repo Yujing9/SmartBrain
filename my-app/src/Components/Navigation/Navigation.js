@@ -1,10 +1,35 @@
-function Navigation(){
+export const Navigation = ({ onRouteChange, isSignedIn }) => {
+  if (isSignedIn) {
     return (
-        <div>
-            <nav style={{display:'flex',justifyContent:'flex-end'}}>
-            <p className ='f3 link dim black underline pa3 pointer'>Sign in</p>
-            </nav>
-        </div>
-    )
-}
-export default Navigation;
+      <div>
+        <nav style={{ display: "flex", justifyContent: "flex-end" }}>
+          <p
+            onClick={() => onRouteChange("signin")}
+            className="f3 link dim black underline pa3 pointer"
+          >
+            Sign out
+          </p>
+        </nav>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <nav style={{ display: "flex", justifyContent: "flex-end" }}>
+          <p
+            onClick={() => onRouteChange("signin")}
+            className="f3 link dim black underline pa3 pointer"
+          >
+            Sign in
+          </p>
+          <p
+            onClick={() => onRouteChange("register")}
+            className="f3 link dim black underline pa3 pointer"
+          >
+            Register
+          </p>
+        </nav>
+      </div>
+    );
+  }
+};

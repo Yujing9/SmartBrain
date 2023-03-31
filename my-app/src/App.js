@@ -1,17 +1,21 @@
 import "./App.css";
-import Navigation from "./Components/Navigation/Navigation";
+import {Navigation} from "./Components/Navigation/Navigation";
 import { Logo } from "./Components/Logo/Logo";
 import { ImageLinkForm } from "./Components/ImageLinkForm/ImageLinkForm";
 import { Rank } from "./Components/Rank/Rank";
 import ParticlesBg from "particles-bg";
 import { useState } from "react";
 import { FaceRecognition } from "./Components/FaceRecognition/FaceRecognition";
+import { Signin } from "./Components/Signin/Signin";
+import { Register } from "./Components/Register/Register";
 
 // https://samples.clarifai.com/face-det.jpg
 
 function App() {
   const [url, setUrl] = useState("");
   const [box, setBox] = useState({});
+  const [route, setRoute] = useState("signin");
+  const [isSignedIn , setIsSignedIn] = useState(false);
   const calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById("inputimage");
@@ -80,16 +84,35 @@ function App() {
     detectImage(url);
     console.log("click");
   };
+
+  const onRouteChange = (route) => {
+    if(route === "signout"){
+      setIsSignedIn(false);
+    }else if(route === "home"){
+      setIsSignedIn(true);
+    }
+    setRoute(route);
+  }
+
   return (
     <div className="App">
-      <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm
-        onInputChange={onInputChange}
-        onButtonSubmit={onButtonSubmit}
-      />
-      <FaceRecognition imgUrl={url} box = {box}/>
+      <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange}/>
+      { route === "home" ?
+          <div>
+            <Logo />
+          <Rank />
+          <ImageLinkForm
+            onInputChange={onInputChange}
+            onButtonSubmit={onButtonSubmit}
+          />
+          <FaceRecognition imgUrl={url} box = {box}/>
+            </div>  
+        : 
+        (
+          route === "signin" ? <Signin onRouteChange={onRouteChange}/> : <Register onRouteChange={onRouteChange}/>
+        )
+      }
+      
       <ParticlesBg type="polygon" bg={true} />
     </div>
   );
